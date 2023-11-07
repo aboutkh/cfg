@@ -20,6 +20,7 @@
     "posttest": "npm run lint"
   },
   "devDependencies": {
+    "@types/ejs": "^3.1.5",
     "@types/js-yaml": "^4.0.8",
     "@types/node": "20.8.2",
     "gts": "^5.2.0",
@@ -30,6 +31,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.441.0",
+    "ejs": "^3.1.9",
     "js-yaml": "^4.1.0",
     "node-fetch": "^2.7.0",
     "synckit": "^0.8.5"

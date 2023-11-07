@@ -1,33 +1,50 @@
-console.log('Try npm run lint/fix!');
+import * as fs from 'fs';
+import * as path from 'path';
+import * as yaml from 'js-yaml';
+import * as ejs from 'ejs';
+import {extend as extendYaml} from './yaml-tags';
 
-const longString =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ut aliquet diam.';
+const schema = extendYaml(yaml.DEFAULT_SCHEMA);
 
-const trailing = 'Semicolon';
-
-const why = {am: 'I tabbed?'};
-
-const iWish = "I didn't have a trailing space...";
-
-const sicilian = true;
-
-const vizzini = sicilian ? !sicilian : sicilian;
-
-const re = /foo {3}bar/;
-
-export function doSomeStuff(
-  withThis: string,
-  andThat: string,
-  andThose: string[]
-) {
-  //function on one line
-  if (!andThose.length) {
-    return false;
-  }
-  console.log(withThis);
-  console.log(andThat);
-  console.dir(andThose);
-  console.log(longString, trailing, why, iWish, vizzini, re);
-  return;
+export interface Options {
+  data?: ejs.Data;
+  indexFile?: string;
 }
-// TODO: more examples
+
+export function load(configDir: string, options: Options = {}): any {
+  const {indexFile = 'config.yaml'} = options;
+  if (configDir.endsWith(indexFile)) {
+    configDir = path.dirname(configDir);
+  }
+
+  const config: Record<string, any> = {};
+  loadBackward(configDir, indexFile, config);
+
+  return config;
+}
+
+function loadBackward(
+  configDir: string,
+  indexFile: string,
+  config: Record<string, any>
+) {
+  const cwd = process.cwd();
+  const filePath = path.join(configDir, indexFile);
+  if (fs.existsSync(filePath)) {
+    Object.assign(config, loadFile(filePath));
+  }
+  const eof =
+    configDir === cwd || configDir === '.' || configDir === '/' || !configDir;
+  if (eof) {
+    return;
+  }
+
+  return loadBackward(path.dirname(configDir), indexFile, config);
+}
+
+function loadFile(filePath: string, options?: Options): any {
+  const relativePath = path.join(process.cwd(), filePath);
+  const template = fs.readFileSync(relativePath, {encoding: 'utf-8'});
+  const content = ejs.render(template, options?.data);
+  return yaml.load(content, {schema});
+}

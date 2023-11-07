@@ -14,7 +14,7 @@ interface YamlFile {
    * Read file from the `location` and returns the content of file.
    * @param path the location of file
    */
-  readFile(location: string): any;
+  readFile(location: string): unknown;
 }
 
 /**
@@ -32,7 +32,7 @@ class LocalFile implements YamlFile {
     return fs.existsSync(this.resolveFilePath(location));
   };
 
-  readFile = (location: string): any => {
+  readFile = (location: string): unknown => {
     const content = fs.readFileSync(this.resolveFilePath(location), {
       encoding: 'utf-8',
     });
@@ -82,7 +82,7 @@ class S3File implements YamlFile {
     return true;
   };
 
-  readFile = (location: string): any => {
+  readFile = (location: string): unknown => {
     const response = s3Get(location);
     return yaml.load(response, {schema: this.schema});
   };
