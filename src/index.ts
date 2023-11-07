@@ -11,13 +11,16 @@ export interface Options {
   indexFile?: string;
 }
 
-export function load(configDir: string, options: Options = {}): any {
+export function load(
+  configDir: string,
+  options: Options = {}
+): Record<string, unknown> {
   const {indexFile = 'config.yaml'} = options;
   if (configDir.endsWith(indexFile)) {
     configDir = path.dirname(configDir);
   }
 
-  const config: Record<string, any> = {};
+  const config: Record<string, unknown> = {};
   loadBackward(configDir, indexFile, config);
 
   return config;
@@ -26,7 +29,7 @@ export function load(configDir: string, options: Options = {}): any {
 function loadBackward(
   configDir: string,
   indexFile: string,
-  config: Record<string, any>
+  config: Record<string, unknown>
 ) {
   const cwd = process.cwd();
   const filePath = path.join(configDir, indexFile);
@@ -42,7 +45,7 @@ function loadBackward(
   return loadBackward(path.dirname(configDir), indexFile, config);
 }
 
-function loadFile(filePath: string, options?: Options): any {
+function loadFile(filePath: string, options?: Options) {
   const relativePath = path.join(process.cwd(), filePath);
   const template = fs.readFileSync(relativePath, {encoding: 'utf-8'});
   const content = ejs.render(template, options?.data);
