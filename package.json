@@ -20,8 +20,18 @@
     "posttest": "npm run lint"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.8",
+    "@types/node": "20.8.2",
     "gts": "^5.2.0",
-    "typescript": "~5.2.0",
-    "@types/node": "20.8.2"
+    "i": "^0.3.7",
+    "npm": "^10.2.3",
+    "ts-node": "^10.9.1",
+    "typescript": "~5.2.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.441.0",
+    "js-yaml": "^4.1.0",
+    "node-fetch": "^2.7.0",
+    "synckit": "^0.8.5"
   }
 }
