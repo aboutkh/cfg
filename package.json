@@ -1,11 +1,11 @@
 {
   "name": "@aboutkh/cfg",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "YAML Configuration (beta)",
-  "main": "build/src/index.js",
-  "types": "build/src/index.d.ts",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "files": [
-    "build/src"
+    "./build"
   ],
   "license": "Apache-2.0",
   "keywords": [],
