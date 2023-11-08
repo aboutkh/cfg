@@ -1,7 +1,7 @@
 {
-  "name": "",
-  "version": "0.0.0",
-  "description": "",
+  "name": "cfg",
+  "version": "0.1.0",
+  "description": "YAML Configuration (beta)",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
   "files": [
