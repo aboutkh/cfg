@@ -1,5 +1,5 @@
 {
-  "name": "cfg",
+  "name": "@aboutkh/cfg",
   "version": "0.1.0",
   "description": "YAML Configuration (beta)",
   "main": "build/src/index.js",
@@ -35,5 +35,14 @@
     "js-yaml": "^4.1.0",
     "node-fetch": "^2.7.0",
     "synckit": "^0.8.5"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aboutkh/cfg.git"
+  },
+  "author": "Khang Hua",
+  "bugs": {
+    "url": "https://github.com/aboutkh/cfg/issues"
+  },
+  "homepage": "https://github.com/aboutkh/cfg#readme"
 }
