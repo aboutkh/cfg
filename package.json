@@ -32,6 +32,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.441.0",
     "ejs": "^3.1.9",
+    "glob": "^10.3.10",
     "js-yaml": "^4.1.0",
     "node-fetch": "^2.7.0",
     "synckit": "^0.8.5"

@@ -2,52 +2,56 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
 import * as ejs from 'ejs';
+import * as glob from 'glob';
 import {extend as extendYaml} from './yaml-tags';
+import {mergeDeep} from './utils/mergedeep';
 
 const schema = extendYaml(yaml.DEFAULT_SCHEMA);
 
 export interface Options {
   data?: ejs.Data;
-  indexFile?: string;
 }
 
 export function load(
   configDir: string,
   options: Options = {}
 ): Record<string, unknown> {
-  const {indexFile = 'config.yaml'} = options;
-  if (configDir.endsWith(indexFile)) {
+  if (fs.statSync(configDir).isFile()) {
     configDir = path.dirname(configDir);
   }
 
-  const config: Record<string, unknown> = {};
-  loadBackward(configDir, indexFile, config);
+  let config: Record<string, unknown> = {};
+  const configFiles = listConfigFiles(configDir);
+  configFiles.forEach(configFile => {
+    config = mergeDeep(config, loadFile(configFile, options));
+  });
 
   return config;
 }
 
-function loadBackward(
-  configDir: string,
-  indexFile: string,
-  config: Record<string, unknown>
-) {
-  const cwd = process.cwd();
-  const filePath = path.join(configDir, indexFile);
-  if (fs.existsSync(filePath)) {
-    Object.assign(config, loadFile(filePath));
-  }
-  const eof =
-    configDir === cwd || configDir === '.' || configDir === '/' || !configDir;
-  if (eof) {
-    return;
+function listConfigFiles(configDir: string): string[] {
+  if (!fs.existsSync(configDir)) {
+    return [];
   }
 
-  return loadBackward(path.dirname(configDir), indexFile, config);
+  const configFiles = [];
+  const cwd = process.cwd();
+  const parts = configDir.split('/');
+  for (let i = 0; i < parts.length; i += 1) {
+    const configPattern = path.join(
+      cwd,
+      parts.slice(0, i + 1).join('/'),
+      '*(*.json|*.yaml|*.yml)'
+    );
+    const files = glob.sync(configPattern);
+    configFiles.push(...files);
+  }
+
+  return configFiles;
 }
 
 function loadFile(filePath: string, options?: Options) {
-  const relativePath = path.join(process.cwd(), filePath);
-  const template = fs.readFileSync(relativePath, {encoding: 'utf-8'});
+  const template = fs.readFileSync(filePath, {encoding: 'utf-8'});
   const content = ejs.render(template, options?.data);
-  return yaml.load(content, {schema});
+  return yaml.load(content, {schema}) || {};
 }
