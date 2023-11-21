@@ -1,0 +1,5 @@
+vpcIp: 10.0.0.0/24
+vpcName: example
+tags:
+  - Name: example
+    Value: VpcStack

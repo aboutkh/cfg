@@ -1,0 +1,6 @@
+bucketName: example
+tags:
+  - Name: BucketName
+    Value: dev
+  - Name: Environment
+    Value: example
